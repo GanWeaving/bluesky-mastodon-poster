@@ -12,11 +12,11 @@ import sys
 PROMPT_TEXT = "Warning: Text is too long. Please edit the text to 300 characters or less."
 CHOICE_PROMPT = "Choose an option:\n(1) Post images\n(2) Post text\n(3) Exit\nYour choice: "
 
-def resize_image(image_file, max_size_kb=976.56, max_iterations=4):
+def resize_image(image_file, max_size_kb=976.56, max_iterations=10):
     img = Image.open(image_file)
     img_format = img.format
 
-    for _ in range(max_iterations):
+    for i in range(max_iterations):
         img_data = io.BytesIO()
         img.save(img_data, format=img_format)
         img_data.seek(0)
@@ -27,6 +27,7 @@ def resize_image(image_file, max_size_kb=976.56, max_iterations=4):
         img.thumbnail((img.width * 0.9, img.height * 0.9), Image.LANCZOS)
 
     return None
+
 
 def get_multiline_input(prompt):
     print(prompt)
