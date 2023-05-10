@@ -1,13 +1,14 @@
 import os
 import io
+import curses
+import curses.ascii
+import sys
 from mastodon import Mastodon
 from PIL import Image
 from getpass import getpass
 from atproto import Client, models
 from datetime import datetime
-import curses
-import curses.ascii
-import sys
+from config import BLUESKY_EMAIL, BLUESKY_PASSWORD, MASTODON_CLIENT_ID, MASTODON_CLIENT_SECRET, MASTODON_ACCESS_TOKEN, MASTODON_API_BASE_URL
 
 PROMPT_TEXT = "Warning: Text is too long. Please edit the text to 300 characters or less."
 CHOICE_PROMPT = "Choose an option:\n(1) Post images\n(2) Post text\n(3) Exit\nYour choice: "
@@ -16,7 +17,7 @@ def resize_image(image_file, max_size_kb=976.56, max_iterations=10):
     img = Image.open(image_file)
     img_format = img.format
 
-    for i in range(max_iterations):
+    for _ in range(max_iterations):
         img_data = io.BytesIO()
         img.save(img_data, format=img_format)
         img_data.seek(0)
@@ -27,7 +28,6 @@ def resize_image(image_file, max_size_kb=976.56, max_iterations=10):
         img.thumbnail((img.width * 0.9, img.height * 0.9), Image.LANCZOS)
 
     return None
-
 
 def get_multiline_input(prompt):
     print(prompt)
@@ -105,6 +105,10 @@ def post_images(client, mastodon):
         print("No valid images were processed. Exiting.")
         return
 
+    add_hashtags = input("Do you want to add the hashtags '#midjourney #aiart #aiartcommunity' to the text? (y/n): ")
+    if add_hashtags.lower() == 'y':
+        text += '\n\n#midjourney #aiart #aiartcommunity'
+
     # Post to Mastodon
     mastodon.status_post(text, media_ids=mastodon_images)
 
@@ -141,15 +145,15 @@ def exit_program(client, mastodon):
 
 def main():
     client = Client()
-    email =  'your_email' 
-    password = 'your_password' 
+    email = BLUESKY_EMAIL
+    password = BLUESKY_PASSWORD
     client.login(email, password)
 
     mastodon = Mastodon(
-        client_id='your_id',
-        client_secret='your_secret',
-        access_token='your_token',
-        api_base_url='your_url' 
+        client_id=MASTODON_CLIENT_ID,
+        client_secret=MASTODON_CLIENT_SECRET,
+        access_token=MASTODON_ACCESS_TOKEN,
+        api_base_url=MASTODON_API_BASE_URL
     )
 
     actions = {'1': post_images, '2': post_text, '3': exit_program}
@@ -163,4 +167,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
