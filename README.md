@@ -1,6 +1,6 @@
 # bluesky-mastodon-poster
 
-Welcome to the Publish-to-Bluesky-and-Mastodon app!
+Welcome to the (very WIP) Publish-to-Bluesky-and-Mastodon app!
 
 With this app, you can publish text and/or image posts on both Bluesky and Mastodon social media platforms in one go.
 
