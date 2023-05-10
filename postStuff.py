@@ -29,7 +29,11 @@ def resize_image(image_file, max_size_kb=976.56, max_iterations=4):
     return None
 
 def get_multiline_input(prompt):
-    return '\n'.join(iter(input, 'END'))
+    print(prompt)
+    lines = []
+    for line in iter(input, 'END'):
+        lines.append(line)
+    return '\n'.join(lines)
 
 def edit_text_window(stdscr, prompt, initial_text):
     curses.echo()
